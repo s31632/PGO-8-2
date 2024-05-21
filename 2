@@ -1,0 +1,52 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+class ShoppingCart {
+    private List<String> products;
+    private String userAccount;
+
+    public ShoppingCart() {
+        this.products = new ArrayList<>();
+    }
+
+    public ShoppingCart(String userAccount) {
+        this.userAccount = userAccount;
+        this.products = new ArrayList<>();
+    }
+
+    public ShoppingCart(String userAccount, List<String> products) {
+        this.userAccount = userAccount;
+        this.products = new ArrayList<>(products);
+    }
+
+    public void addProduct(String product, Map<String, Integer> stock) {
+        if (stock.getOrDefault(product, 0) > 0) {
+            this.products.add(product);
+            stock.put(product, stock.get(product) - 1);
+        } else {
+            System.out.println("Cannot add product " + product + ": Out of stock");
+        }
+    }
+    public void removeProduct(String product, Map<String, Integer> stock) {
+        if (this.products.remove(product)) {
+            stock.put(product, stock.getOrDefault(product, 0) + 1);
+        }
+    }
+
+
+    public void pay(Map<String, Double> prices) {
+        double total = 0.0;
+        for (String product : this.products) {
+            total += prices.getOrDefault(product, 0.0);
+        }
+        System.out.printf("Total price for %s: $%.2f%n", userAccount != null ? userAccount : "Guest", total);
+        this.products.clear();
+    }
+
+    @Override
+    public String toString() {
+        return "ShoppingCart(User: " + userAccount + ", Products: " + products + ")";
+    }
+}
